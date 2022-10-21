@@ -1,0 +1,72 @@
+<!--
+  - Full screen clock (24-hour with seconds)
+  - Copyright (c) 2020 Project Nayuki. All rights reserved.
+  -
+  - https://www.nayuki.io/page/full-screen-clock-javascript
+  -->
+<!DOCTYPE html>
+<html style="height:100%; margin:0; padding:0">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Clock</title>
+    <style type="text/css">
+        /* Customizable font and colors */
+        html {
+            background: #000000;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        #bottom-bar {
+            background-color: #333;
+            text-align: center;
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            z-index: 9999;
+            font-size: 3em;
+        }
+
+        .sec {
+            font-size: 0.1em;
+        }
+    </style>
+</head>
+
+<body style="display:flex; height:100%; margin:0; padding:0; justify-content:center; align-items:center">
+    <span id="clocktext" style="font-kerning:none"></span>
+
+    <script>
+        "use strict";
+
+        var bottomBar = document.getElementById("bottom-bar");
+        var textElem = document.getElementById("clocktext");
+        var targetWidth = 0.9;  // Proportion of full screen width
+        var curFontSize = 20;  // Do not change
+
+        function updateClock() {
+            var d = new Date();
+            var s = "";
+            s += (10 > d.getHours() ? "0" : "") + d.getHours() + ":";
+            s += (10 > d.getMinutes() ? "0" : "") + d.getMinutes();
+            s += "<span class=\"sec\">:" + ((10 > d.getSeconds() ? "0" : "") + d.getSeconds()) + "</span>";
+            textElem.innerHTML = s;
+            setTimeout(updateClock, 1000 - d.getTime() % 1000 + 20);
+        }
+
+        function updateTextSize() {
+            for (var i = 0; 3 > i; i++) {  // Iterate for better better convergence
+                curFontSize *= targetWidth / (textElem.offsetWidth / textElem.parentNode.offsetWidth);
+                textElem.style.fontSize = curFontSize + "pt";
+            }
+        }
+
+        updateClock();
+        updateTextSize();
+        window.addEventListener("resize", updateTextSize);
+    </script>
+</body>
+
+</html>
